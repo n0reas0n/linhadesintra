@@ -2,7 +2,10 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Linha de Sintra</title>
+  <title>Linha de Sintra — Pessoas e Lugares</title>
+
+  <!-- Meta description para SEO -->
+  <meta name="description" content="Projeto cultural sobre a Linha de Sintra. Pessoas, lugares, bairros, subculturas e memórias ao longo das estações entre Lisboa e Sintra." />
 
   <!-- IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,9 +29,8 @@
       transform: translate(-50%, -50%);
       font-size: 14px;
       letter-spacing: 1px;
-
-      pointer-events: none; /* desativa hover/click */
-      user-select: none;    /* impede seleção */
+      pointer-events: none;
+      user-select: none;
     }
 
     .word {
@@ -52,9 +54,23 @@
 
 <body>
 
+  <!-- Texto visível ao utilizador -->
   <div class="center-text">
     <b>PESSOAS E LUGARES</b>
   </div>
+
+  <!-- SEO invisível para o Google -->
+  <h1 style="position:absolute; left:-9999px;">
+    Linha de Sintra — Pessoas, Lugares e Subculturas
+  </h1>
+
+  <p style="position:absolute; left:-9999px;">
+    Linha de Sintra é um projeto cultural dedicado às pessoas, lugares,
+    bairros e subculturas ao longo das estações da Linha de Sintra,
+    incluindo Amadora, Reboleira, Queluz-Belas, Monte Abraão,
+    Massamá-Barcarena, Cacém, Rio de Mouro, Mercês,
+    Algueirão–Mem Martins, Portela de Sintra e Sintra.
+  </p>
 
   <script>
     const words = [
@@ -75,7 +91,7 @@
 
     document.addEventListener("mousemove", (e) => {
       const now = Date.now();
-      if (now - lastTime < 250) return;
+      if (now - lastTime < 150) return; // frequência das palavras
       lastTime = now;
 
       const word = document.createElement("div");
@@ -89,7 +105,7 @@
 
       setTimeout(() => {
         word.remove();
-      }, 500);
+      }, 1000); // duração da animação
     });
   </script>
 
