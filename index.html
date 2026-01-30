@@ -72,29 +72,26 @@
     Algueirão–Mem Martins, Portela de Sintra e Sintra.
   </p>
 
-  <script>
+ <script>
   const words = [
-    "Amadora",
-    "Reboleira",
-    "Queluz-Belas",
-    "Monte Abraão",
-    "Massamá-Barcarena",
-    "Cacém",
-    "Rio de Mouro",
-    "Mercês",
-    "Algueirão–Mem Martins",
-    "Portela de Sintra",
-    "Sintra"
+    "AMADORA",
+    "REBOLEIRA",
+    "QUELUZ-BELAS",
+    "MONTE ABRAÃO",
+    "MASSAMÁ-BARCARENA",
+    "CACÉM",
+    "RIO DE MOURO",
+    "MERCÊS",
+    "ALGUEIRÃO–MEM MARTINS",
+    "PORTELA DE SINTRA",
+    "SINTRA"
   ];
 
   let lastTime = 0;
   const activePositions = [];
-
-  const MIN_DISTANCE = 40;    // distância mínima entre palavras
-  const CENTER_PADDING = 80;  // zona protegida ao redor do texto central
-  const INTERVAL = 50;        // intervalo entre palavras
-
-  // paletas suaves
+  const MIN_DISTANCE = 40;
+  const CENTER_PADDING = 80;
+  const INTERVAL = 50;
   const colors = ["#333333", "#555555", "#777777", "#999999"];
 
   function isTooClose(x, y) {
@@ -129,24 +126,24 @@
     word.style.left = x + "px";
     word.style.top  = y + "px";
     word.style.color = colors[Math.floor(Math.random() * colors.length)];
+    word.style.fontWeight = "400";  // remove bold das palavras animadas
     word.style.transition = "all 1s ease";
 
     document.body.appendChild(word);
     activePositions.push({ x, y });
 
-    // animação suave de fade e subida
     setTimeout(() => {
       word.style.opacity = 0;
       word.style.transform = "translateY(-20px)";
     }, 50);
 
-    // remove do DOM após 1s
     setTimeout(() => {
       word.remove();
       activePositions.shift();
     }, 1050);
   });
 </script>
+
 
 </body>
 </html>
