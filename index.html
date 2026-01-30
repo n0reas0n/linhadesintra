@@ -92,13 +92,16 @@
 
   const MIN_DISTANCE = 40;    // distância mínima entre palavras
   const CENTER_PADDING = 80;  // zona protegida ao redor do texto central
-  const INTERVAL = 60;        // ms entre palavras
+  const INTERVAL = 50;        // intervalo entre palavras
+
+  // paletas suaves
+  const colors = ["#333333", "#555555", "#777777", "#999999"];
 
   function isTooClose(x, y) {
     return activePositions.some(p => {
       const dx = p.x - x;
       const dy = p.y - y;
-      return Math.sqrt(dx * dx + dy * dy) < MIN_DISTANCE;
+      return Math.sqrt(dx*dx + dy*dy) < MIN_DISTANCE;
     });
   }
 
@@ -107,7 +110,6 @@
     if (now - lastTime < INTERVAL) return;
     lastTime = now;
 
-    // zona central protegida
     const center = document.querySelector(".center-text").getBoundingClientRect();
     if (
       e.clientX > center.left - CENTER_PADDING &&
@@ -126,18 +128,25 @@
     word.textContent = words[Math.floor(Math.random() * words.length)];
     word.style.left = x + "px";
     word.style.top  = y + "px";
+    word.style.color = colors[Math.floor(Math.random() * colors.length)];
+    word.style.transition = "all 1s ease";
 
     document.body.appendChild(word);
     activePositions.push({ x, y });
 
-    // remove palavra após a animação
+    // animação suave de fade e subida
+    setTimeout(() => {
+      word.style.opacity = 0;
+      word.style.transform = "translateY(-20px)";
+    }, 50);
+
+    // remove do DOM após 1s
     setTimeout(() => {
       word.remove();
       activePositions.shift();
-    }, 1000);
+    }, 1050);
   });
 </script>
-
 
 </body>
 </html>
