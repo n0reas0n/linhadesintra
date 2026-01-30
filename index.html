@@ -2,20 +2,96 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>\m/ linha de sintra \m/</title>
+  <title>Linha de Sintra</title>
+
+  <!-- IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
+      width: 100vw;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 14px; /* podes baixar para 14px se quiseres ainda mais pequeno */
+      background: #ffffff;
+      font-family: "IBM Plex Mono", monospace;
+      overflow: hidden;
+    }
+
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      letter-spacing: 1px;
+
+      pointer-events: none; /* desativa hover/click */
+      user-select: none;    /* impede seleção */
+    }
+
+    .word {
+      position: absolute;
+      font-size: 10px;
+      opacity: 0;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      animation: fade 1s ease forwards;
+    }
+
+    @keyframes fade {
+      0%   { opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
+
 <body>
-  pessoas e lugares
+
+  <div class="center-text">
+    <b>PESSOAS E LUGARES</b>
+  </div>
+
+  <script>
+    const words = [
+      "Amadora",
+      "Reboleira",
+      "Queluz-Belas",
+      "Monte Abraão",
+      "Massamá-Barcarena",
+      "Cacém",
+      "Rio de Mouro",
+      "Mercês",
+      "Algueirão–Mem Martins",
+      "Portela de Sintra",
+      "Sintra"
+    ];
+
+    let lastTime = 0;
+
+    document.addEventListener("mousemove", (e) => {
+      const now = Date.now();
+      if (now - lastTime < 250) return;
+      lastTime = now;
+
+      const word = document.createElement("div");
+      word.className = "word";
+      word.textContent = words[Math.floor(Math.random() * words.length)];
+
+      word.style.left = (e.pageX + 10) + "px";
+      word.style.top  = (e.pageY + 10) + "px";
+
+      document.body.appendChild(word);
+
+      setTimeout(() => {
+        word.remove();
+      }, 500);
+    });
+  </script>
+
 </body>
 </html>
