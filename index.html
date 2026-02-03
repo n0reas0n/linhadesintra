@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="icon" type="image/png" href="/favicon.png">
 
@@ -76,6 +77,9 @@ body{
   margin-right:4px;
   transform:translateY(2px);
   transition: all 0.25s ease;
+  background-color: #C8DAFE;
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
 .word-anim.visible{
@@ -99,15 +103,19 @@ body{
   font-weight:700;
   text-transform:lowercase;
 }
-  .word-anim {
-  opacity: 0;
-  display: inline-block;
-  margin-right: 4px; /* mantém espaço entre palavras */
-  transform: translateY(2px);
-  transition: all 0.25s ease;
-  background-color: #C8DAFE; /* cor de fundo que quiseres */
-  padding: 0 2px; /* pequeno padding para não grudar nas letras */
-  border-radius: 2px; /* opcional, arredonda ligeiramente */
+
+/* ================= RESPONSIVE MOBILE ================= */
+@media (max-width: 600px) {
+  .top-left { font-size:12px; top:20px; left:16px; }
+  .top-right { font-size:11px; top:20px; right:16px; }
+  .manifesto {
+    font-size:16px;
+    max-width:90%;
+    line-height:1.6;
+  }
+  .word {
+    font-size:12px;
+  }
 }
 </style>
 </head>
@@ -133,7 +141,7 @@ const lines = [
 "A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO TODOS OS DIAS.",
 "DOCUMENTAMOS PESSOAS, LUGARES E MEMÓRIAS.",
 "FUNCIONAMOS COMO PLATAFORMA EDITORIAL, ARQUIVO COLETIVO E REDE CULTURAL.",
-"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span> <class='email'>proximaparagem@linhadesintra.pt</span>",
+"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span class='email'>proximaparagem@linhadesintra.pt</span>",
 "LANÇAMENTO PREVISTO PARA O SEGUNDO TRIMESTRE DE 2026."
 ];
 
@@ -159,7 +167,7 @@ function animateLine(index){
   div.style.opacity = "1";
   div.style.transform = "translateX(0)";
 
-  // palavras tipo teletexto
+  // delay palavras tipo teletexto
   const spans = div.querySelectorAll(".word-anim");
   spans.forEach((span,k)=>{
     setTimeout(()=>{
@@ -167,16 +175,12 @@ function animateLine(index){
     }, k*120);
   });
 
-  // calcular tempo total da linha: palavras * delay + extra 200ms
-  const totalTime = words.length * 120 + 400;
-
-  // chama a próxima linha após o tempo total
-  setTimeout(()=>{
-    animateLine(index + 1);
-  }, totalTime);
+  // total tempo da linha
+  const totalTime = words.length*120 + 400;
+  setTimeout(()=>{ animateLine(index+1); }, totalTime);
 }
 
-// iniciar animação sequencial
+// iniciar animação
 animateLine(0);
 
 /* ================= ESTAÇÕES BACKGROUND ================= */
@@ -189,8 +193,7 @@ const stations = [
 
 let lastTime = 0;
 const active = [];
-
-const MIN_DISTANCE = 45;
+const MIN_DISTANCE = 80;
 const INTERVAL = 40;
 
 function tooClose(x,y){
@@ -213,39 +216,43 @@ function insideProtectedArea(x,y){
   );
 }
 
-document.addEventListener("mousemove",(e)=>{
-  const now=Date.now();
-  if(now-lastTime<INTERVAL) return;
-  lastTime=now;
+function handleMove(e){
+  e.preventDefault();
+  const touch = e.touches ? e.touches[0] : e;
+  const now = Date.now();
+  if(now - lastTime < INTERVAL) return;
+  lastTime = now;
 
-  const x=e.pageX+10;
-  const y=e.pageY+10;
+  const x = touch.pageX + 10;
+  const y = touch.pageY + 10;
 
   if(tooClose(x,y)) return;
-  if(insideProtectedArea(e.clientX,e.clientY)) return;
+  if(insideProtectedArea(touch.clientX, touch.clientY)) return;
 
-  const w=document.createElement("div");
+  const w = document.createElement("div");
   w.className="word";
-  w.textContent=stations[Math.floor(Math.random()*stations.length)];
+  w.textContent = stations[Math.floor(Math.random()*stations.length)];
 
-  w.style.left=x+"px";
-  w.style.top=y+"px";
+  w.style.left = x+"px";
+  w.style.top = y+"px";
 
   document.body.appendChild(w);
   active.push({x,y});
 
   setTimeout(()=>{ w.style.opacity=1; },20);
-
   setTimeout(()=>{
     w.style.opacity=0;
     w.style.transform="translateY(-20px)";
   },600);
-
   setTimeout(()=>{
     w.remove();
     active.shift();
   },1100);
-});
+}
+
+// eventos desktop e mobile
+document.addEventListener("mousemove", handleMove);
+document.addEventListener("touchmove", handleMove);
 
 /* ================= RODAPÉ ================= */
 const footer = document.createElement("div");
@@ -257,6 +264,6 @@ footer.style.color="#999";
 footer.innerText = "© 2026 linhadesintra.pt";
 document.body.appendChild(footer);
 </script>
-  
+
 </body>
 </html>
