@@ -53,7 +53,6 @@ body{
   transform:translate(-50%,-50%);
   max-width:520px;
   margin:0 auto;
-
   font-family:"Roboto", sans-serif;
   font-size:14px;
   line-height:1.7;
@@ -119,47 +118,56 @@ A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS 
 </p>
 
 <script>
-/* ================= MANIFESTO CINEMATOGRÁFICO ================= */
+/* ================= MANIFESTO SEQUENCIAL ================= */
 const lines = [
 "A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO TODOS OS DIAS.",
 "DOCUMENTAMOS PESSOAS, LUGARES E MEMÓRIAS.",
 "FUNCIONAMOS COMO PLATAFORMA EDITORIAL, ARQUIVO COLETIVO E REDE CULTURAL.",
-"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span <class='email'>proximaparagem@linhadesintra.pt</span>",
+"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span class='email'>proximaparagem@linhadesintra.pt</span>",
 "LANÇAMENTO PREVISTO PARA O SEGUNDO TRIMESTRE DE 2026."
 ];
 
 const container = document.getElementById("manifesto");
 
-lines.forEach((lineText,i)=>{
+function animateLine(index){
+  if(index >= lines.length) return;
+
   const div = document.createElement("div");
   div.className="line";
-  
-  // separar palavras
-  const words = lineText.split(" ");
+  const words = lines[index].split(" ");
   words.forEach((word)=>{
     const span = document.createElement("span");
     span.className="word-anim";
     span.innerHTML = word;
     div.appendChild(span);
-    div.appendChild(document.createTextNode(" ")); // espaço entre palavras
+    div.appendChild(document.createTextNode(" "));
   });
 
   container.appendChild(div);
 
-  // animação ticker horizontal
-  setTimeout(()=>{
-    div.style.opacity = "1";
-    div.style.transform = "translateX(0)";
+  // animação horizontal tipo ticker
+  div.style.opacity = "1";
+  div.style.transform = "translateX(0)";
 
-    // delay palavras tipo teletexto
-    const spans = div.querySelectorAll(".word-anim");
-    spans.forEach((span,k)=>{
-      setTimeout(()=>{
-        span.classList.add("visible");
-      }, k*120);
-    });
-  }, i*1200);
-});
+  // palavras tipo teletexto
+  const spans = div.querySelectorAll(".word-anim");
+  spans.forEach((span,k)=>{
+    setTimeout(()=>{
+      span.classList.add("visible");
+    }, k*120);
+  });
+
+  // calcular tempo total da linha: palavras * delay + extra 200ms
+  const totalTime = words.length * 120 + 400;
+
+  // chama a próxima linha após o tempo total
+  setTimeout(()=>{
+    animateLine(index + 1);
+  }, totalTime);
+}
+
+// iniciar animação sequencial
+animateLine(0);
 
 /* ================= ESTAÇÕES BACKGROUND ================= */
 const stations = [
@@ -228,11 +236,17 @@ document.addEventListener("mousemove",(e)=>{
     active.shift();
   },1100);
 });
+
+/* ================= RODAPÉ ================= */
+const footer = document.createElement("div");
+footer.style.position="absolute";
+footer.style.bottom="10px";
+footer.style.right="10px";
+footer.style.fontSize="10px";
+footer.style.color="#999";
+footer.innerText = "© 2026 linhadesintra.pt";
+document.body.appendChild(footer);
 </script>
-  
-<div style="position:absolute; bottom:10px; right:10px; font-size:10px; color:#999;">
-  © 2026 Linha de Sintra Network
-</div>
   
 </body>
 </html>
