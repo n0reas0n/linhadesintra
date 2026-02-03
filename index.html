@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <title>linha de sintra</title>
+<meta charset="UTF-8" />
+<title>linha de sintra</title>
 
-  <meta name="description" content="Projeto cultural sobre a Linha de Sintra. Pessoas, lugares, bairros, subculturas e memórias ao longo das estações entre Lisboa e Sintra.">
+<meta name="description" content="Projeto cultural sobre a Linha de Sintra. Pessoas, lugares, bairros, subculturas e memórias ao longo das estações entre Lisboa e Sintra." />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Roboto:wght@400&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
+/* ---------------- BASE ---------------- */
 
-/* BASE */
 body{
   margin:0;
-  background:#fff;
+  width:100vw;
+  height:100vh;
+  background:#ffffff; /* ← voltou ao branco */
   font-family:"IBM Plex Mono", monospace;
   overflow:hidden;
+  color:#111;
 }
 
-
-/* HEADER */
+/* ---------------- TOP TEXTS ---------------- */
 
 .top-left{
-  position:fixed;
+  position:absolute;
   top:28px;
-  left:32px;
+  left:28px;
   font-size:13px;
   letter-spacing:1px;
   user-select:none;
@@ -37,72 +39,89 @@ body{
 }
 
 .top-right{
-  position:fixed;
+  position:absolute;
   top:28px;
-  right:32px;
-  font-size:13px;
+  right:28px;
+  font-size:12px;
   letter-spacing:1px;
   user-select:none;
   pointer-events:none;
 }
 
-
-/* MANIFESTO — alinhado com header */
+/* ---------------- MANIFESTO ---------------- */
 
 .manifesto{
   position:absolute;
-
-  top:110px;     /* sobe */
-  left:32px;     /* mesma coluna do header */
-
-  width:520px;
-  max-width:42vw;
+  top:130px;
+  left:28px;
+  width:560px;
 
   font-family:"Roboto", sans-serif;
-  font-size:15px;
-  line-height:1.8;
+  font-size:14px;
+  line-height:1.7;
 
-  text-transform:uppercase; /* CAPS */
+  text-transform:uppercase;
   text-align:justify;
 
-  letter-spacing:0.5px;
-
-  pointer-events:none;
-  user-select:none;
+  overflow:hidden;
 }
 
+/* ticker line */
+.line{
+  white-space:normal;
+  transform:translateX(110%);
+  opacity:0;
+  margin-bottom:12px;
+}
 
-/* ESTAÇÕES */
+/* animação horizontal */
+.line.visible{
+  animation:ticker 1.1s cubic-bezier(.25,.8,.25,1) forwards;
+}
+
+@keyframes ticker{
+  0%{
+    transform:translateX(110%);
+    opacity:0;
+  }
+  15%{
+    opacity:1;
+  }
+  100%{
+    transform:translateX(0);
+    opacity:1;
+  }
+}
+
+.email{
+  font-weight:700;
+}
+
+/* ---------------- WORDS BACKGROUND ---------------- */
 
 .word{
   position:absolute;
   font-size:10px;
   font-weight:400;
-  letter-spacing:0.6px;
-
   opacity:0;
-  animation:fade 1.1s ease forwards;
-
   pointer-events:none;
-}
-
-@keyframes fade{
-  0%{opacity:0;transform:translateY(8px);}
-  20%{opacity:0.9;}
-  80%{opacity:0.9;}
-  100%{opacity:0;transform:translateY(-10px);}
+  white-space:nowrap;
+  color:#222;
+  transition:all 1s ease;
 }
 
 </style>
 </head>
 
 
-
 <body>
 
+<!-- TOP TEXTS -->
 <div class="top-left">PESSOAS E LUGARES</div>
 <div class="top-right">LINHA DE SINTRA NETWORK</div>
 
+
+<!-- MANIFESTO -->
 <div class="manifesto" id="manifesto"></div>
 
 
@@ -112,8 +131,8 @@ Linha de Sintra — Pessoas, Lugares e Subculturas
 </h1>
 
 <p style="position:absolute; left:-9999px;">
-Rossio, Sete Rios, Benfica, Damaia, Amadora, Reboleira,
-Queluz-Belas, Monte Abraão, Massamá-Barcarena, Cacém,
+Projeto cultural sobre as estações da Linha de Sintra incluindo Rossio, Entrecampos, Sete Rios,
+Benfica, Reboleira, Amadora, Queluz-Belas, Monte Abraão, Massamá-Barcarena, Cacém,
 Rio de Mouro, Mercês, Algueirão–Mem Martins, Portela de Sintra e Sintra.
 </p>
 
@@ -121,84 +140,101 @@ Rio de Mouro, Mercês, Algueirão–Mem Martins, Portela de Sintra e Sintra.
 
 <script>
 
-/* MANIFESTO */
+/* ================= MANIFESTO TICKER ================= */
 
-const text = `
-A LINHA DE SINTRA NETWORK É UM ARQUIVO VIVO DEDICADO ÀS PESSOAS,
-AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO
-FERROVIÁRIO TODOS OS DIAS.
+const lines = [
+"A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO TODOS OS DIAS.",
+"DOCUMENTAMOS PESSOAS, LUGARES E MEMÓRIAS.",
+"FUNCIONAMOS COMO PLATAFORMA EDITORIAL, ARQUIVO COLETIVO E REDE CULTURAL.",
+"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span class='email'>PROXIMAPARAGEM@LINHADESINTRA.PT</span>",
+"LANÇAMENTO PREVISTO PARA O SEGUNDO TRIMESTRE DE 2026."
+];
 
-DOCUMENTAMOS MEMÓRIAS, IMAGENS, HISTÓRIAS E ENCONTROS.
+const container = document.getElementById("manifesto");
 
-FUNCIONAMOS COMO PLATAFORMA EDITORIAL,
-ARQUIVO COLETIVO E REDE CULTURAL LOCAL.
+lines.forEach((text,i)=>{
+  const div = document.createElement("div");
+  div.className="line";
+  div.innerHTML=text;
+  container.appendChild(div);
 
-LANÇAMENTO OFICIAL PREVISTO PARA O SEGUNDO TRIMESTRE DE 2026.
-`;
-
-const el=document.getElementById("manifesto");
-let i=0;
-
-function type(){
-  if(i<text.length){
-    el.textContent+=text[i++];
-    setTimeout(type,18);
-  }
-}
-type();
+  setTimeout(()=>{
+    div.classList.add("visible");
+  }, i*900); // entra linha a linha
+});
 
 
 
-/* ESTAÇÕES */
+/* ================= ESTAÇÕES BACKGROUND ================= */
 
-const words=[
-"ROSSIO","SETE RIOS","BENFICA","STA. CRUZ–DAMAIÁ",
-"AMADORA","REBOLEIRA","QUELUZ-BELAS","MONTE ABRAÃO",
+const stations = [
+"ROSSIO","ENTRECAMPOS","SETE RIOS","BENFICA",
+"REBOLEIRA","AMADORA","QUELUZ-BELAS","MONTE ABRAÃO",
 "MASSAMÁ-BARCARENA","CACÉM","RIO DE MOURO","MERCÊS",
 "ALGUEIRÃO–MEM MARTINS","PORTELA DE SINTRA","SINTRA"
 ];
 
-let last=0;
-const INTERVAL=45;
-const MIN_DISTANCE=60;
-const active=[];
+let lastTime = 0;
+const active = [];
 
-function near(x,y){
+const MIN_DISTANCE = 45;
+const INTERVAL = 40;
+
+function tooClose(x,y){
   return active.some(p=>{
-    const dx=p.x-x, dy=p.y-y;
+    const dx=p.x-x;
+    const dy=p.y-y;
     return Math.sqrt(dx*dx+dy*dy)<MIN_DISTANCE;
   });
 }
 
-function blocked(x,y){
-  return y<90 || (x<600 && y<420); /* evita manifesto e header */
+function insideProtectedArea(x,y){
+  const areas = [
+    document.querySelector(".top-left").getBoundingClientRect(),
+    document.querySelector(".top-right").getBoundingClientRect(),
+    document.querySelector(".manifesto").getBoundingClientRect()
+  ];
+
+  return areas.some(a =>
+    x>a.left-20 && x<a.right+20 &&
+    y>a.top-20  && y<a.bottom+20
+  );
 }
 
-document.addEventListener("mousemove",e=>{
+document.addEventListener("mousemove",(e)=>{
+
   const now=Date.now();
-  if(now-last<INTERVAL)return;
-  last=now;
+  if(now-lastTime<INTERVAL) return;
+  lastTime=now;
 
-  if(blocked(e.clientX,e.clientY))return;
+  const x=e.pageX+10;
+  const y=e.pageY+10;
 
-  const x=e.pageX+8;
-  const y=e.pageY+8;
-
-  if(near(x,y))return;
+  if(tooClose(x,y)) return;
+  if(insideProtectedArea(e.clientX,e.clientY)) return;
 
   const w=document.createElement("div");
   w.className="word";
-  w.textContent=words[Math.floor(Math.random()*words.length)];
+  w.textContent=stations[Math.floor(Math.random()*stations.length)];
+
   w.style.left=x+"px";
   w.style.top=y+"px";
 
   document.body.appendChild(w);
   active.push({x,y});
 
+  setTimeout(()=>{ w.style.opacity=1; },20);
+
+  setTimeout(()=>{
+    w.style.opacity=0;
+    w.style.transform="translateY(-20px)";
+  },600);
+
   setTimeout(()=>{
     w.remove();
     active.shift();
   },1100);
+
 });
 
 </script>
