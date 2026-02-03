@@ -14,20 +14,17 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
-/* ---------------- BASE ---------------- */
-
 body{
   margin:0;
   width:100vw;
   height:100vh;
-  background:#ffffff; /* ← voltou ao branco */
+  background:#ffffff;
   font-family:"IBM Plex Mono", monospace;
   overflow:hidden;
   color:#111;
 }
 
-/* ---------------- TOP TEXTS ---------------- */
-
+/* TOP TEXTS */
 .top-left{
   position:absolute;
   top:28px;
@@ -48,57 +45,46 @@ body{
   pointer-events:none;
 }
 
-/* ---------------- MANIFESTO ---------------- */
-
+/* MANIFESTO */
 .manifesto{
   position:absolute;
-  top:130px;
-  left:28px;
-  width:560px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  max-width:520px;
+  margin:0 auto;
 
   font-family:"Roboto", sans-serif;
   font-size:14px;
   line-height:1.7;
-
   text-transform:uppercase;
   text-align:justify;
-
   overflow:hidden;
 }
 
-/* ticker line */
 .line{
   white-space:normal;
-  transform:translateX(110%);
   opacity:0;
   margin-bottom:12px;
+  display:block;
+  transform:translateX(110%);
+  transition: transform 1s cubic-bezier(.25,.8,.25,1), opacity 1s ease;
 }
 
-/* animação horizontal */
-.line.visible{
-  animation:ticker 1.1s cubic-bezier(.25,.8,.25,1) forwards;
+.word-anim{
+  opacity:0;
+  display:inline-block;
+  margin-right:4px;
+  transform:translateY(2px);
+  transition: all 0.25s ease;
 }
 
-@keyframes ticker{
-  0%{
-    transform:translateX(110%);
-    opacity:0;
-  }
-  15%{
-    opacity:1;
-  }
-  100%{
-    transform:translateX(0);
-    opacity:1;
-  }
+.word-anim.visible{
+  opacity:1;
+  transform:translateY(0);
 }
 
-.email{
-  font-weight:700;
-}
-
-/* ---------------- WORDS BACKGROUND ---------------- */
-
+/* WORDS BACKGROUND */
 .word{
   position:absolute;
   font-size:10px;
@@ -110,63 +96,72 @@ body{
   transition:all 1s ease;
 }
 
+.email{
+  font-weight:700;
+  text-transform:lowercase;
+}
 </style>
 </head>
 
-
 <body>
 
-<!-- TOP TEXTS -->
 <div class="top-left">PESSOAS E LUGARES</div>
 <div class="top-right">LINHA DE SINTRA NETWORK</div>
 
-
-<!-- MANIFESTO -->
 <div class="manifesto" id="manifesto"></div>
 
-
-<!-- SEO invisível -->
 <h1 style="position:absolute; left:-9999px;">
 Linha de Sintra — Pessoas, Lugares e Subculturas
 </h1>
 
 <p style="position:absolute; left:-9999px;">
-Projeto cultural sobre as estações da Linha de Sintra incluindo Rossio, Entrecampos, Sete Rios,
-Benfica, Reboleira, Amadora, Queluz-Belas, Monte Abraão, Massamá-Barcarena, Cacém,
-Rio de Mouro, Mercês, Algueirão–Mem Martins, Portela de Sintra e Sintra.
+A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO TODOS OS DIAS.
 </p>
 
-
-
 <script>
-
-/* ================= MANIFESTO TICKER ================= */
-
+/* ================= MANIFESTO CINEMATOGRÁFICO ================= */
 const lines = [
 "A LINHA DE SINTRA NETWORK É UM ARQUIVO DEDICADO ÀS PESSOAS, AOS BAIRROS E ÀS SUBCULTURAS QUE ATRAVESSAM ESTE TERRITÓRIO TODOS OS DIAS.",
 "DOCUMENTAMOS PESSOAS, LUGARES E MEMÓRIAS.",
 "FUNCIONAMOS COMO PLATAFORMA EDITORIAL, ARQUIVO COLETIVO E REDE CULTURAL.",
-"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span class='email'>PROXIMAPARAGEM@LINHADESINTRA.PT</span>",
+"SE TENS INTERESSE EM COLABORAR, ESCREVE PARA <span <class='email'>proximaparagem@linhadesintra.pt</span>",
 "LANÇAMENTO PREVISTO PARA O SEGUNDO TRIMESTRE DE 2026."
 ];
 
 const container = document.getElementById("manifesto");
 
-lines.forEach((text,i)=>{
+lines.forEach((lineText,i)=>{
   const div = document.createElement("div");
   div.className="line";
-  div.innerHTML=text;
+  
+  // separar palavras
+  const words = lineText.split(" ");
+  words.forEach((word)=>{
+    const span = document.createElement("span");
+    span.className="word-anim";
+    span.innerHTML = word;
+    div.appendChild(span);
+    div.appendChild(document.createTextNode(" ")); // espaço entre palavras
+  });
+
   container.appendChild(div);
 
+  // animação ticker horizontal
   setTimeout(()=>{
-    div.classList.add("visible");
-  }, i*900); // entra linha a linha
+    div.style.opacity = "1";
+    div.style.transform = "translateX(0)";
+
+    // delay palavras tipo teletexto
+    const spans = div.querySelectorAll(".word-anim");
+    spans.forEach((span,k)=>{
+      setTimeout(()=>{
+        span.classList.add("visible");
+      }, k*120);
+    });
+  }, i*1200);
 });
 
-
-
 /* ================= ESTAÇÕES BACKGROUND ================= */
-
 const stations = [
 "ROSSIO","ENTRECAMPOS","SETE RIOS","BENFICA",
 "REBOLEIRA","AMADORA","QUELUZ-BELAS","MONTE ABRAÃO",
@@ -194,7 +189,6 @@ function insideProtectedArea(x,y){
     document.querySelector(".top-right").getBoundingClientRect(),
     document.querySelector(".manifesto").getBoundingClientRect()
   ];
-
   return areas.some(a =>
     x>a.left-20 && x<a.right+20 &&
     y>a.top-20  && y<a.bottom+20
@@ -202,7 +196,6 @@ function insideProtectedArea(x,y){
 }
 
 document.addEventListener("mousemove",(e)=>{
-
   const now=Date.now();
   if(now-lastTime<INTERVAL) return;
   lastTime=now;
@@ -234,9 +227,7 @@ document.addEventListener("mousemove",(e)=>{
     w.remove();
     active.shift();
   },1100);
-
 });
-
 </script>
 
 </body>
